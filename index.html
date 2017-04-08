@@ -1,0 +1,125 @@
+<!doctype html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    
+    <title>ピコピコーラス第1回演奏会パンフレットクイズ</title>
+    <meta name="description" content="exchange emojis between 2 slack teams" />
+
+    <!-- Import Google Icon Font -->
+    <link rel="stylesheet" href="http://fonts.googleapis.com/icon?family=Material+Icons">
+
+    <!-- Import Materialize (and jQuery) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/css/materialize.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/js/materialize.min.js"></script>
+
+    <!-- Import Riot.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/riot/3.4.0/riot+compiler.min.js"></script>
+  </head>
+
+  <body>
+
+    <quiz></quiz>
+
+    <script type="riot/tag">
+      <quiz>
+
+        <div class="container">
+
+          <nav class="top-nav red darken-4">
+            <a class="brand-logo">ピコピコーラス第1回演奏会 パンフレットクイズ</a>
+          </nav>
+
+          <div class="row"> 
+            <div class="col offset-s1">
+              <p>
+                ピコピコーラス第1回演奏会にご来場いただきありがとうございました。<br>
+                このページでパンフレットのクイズに回答することができます。
+              </p>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col s6">
+              <div class="card">
+                <div class="card-content">
+                  <span class="card-title">Question 1</span>
+                  <p>回答を入力してください</p>
+                  <div class="input-field">
+                    <input id="answer_Q1" type=text>
+                    <label for="answer_Q1">Answer</label>
+                  </div>
+                </div>
+                <div class="card-action">
+                  <a class="btn" id="submit_Q1" onClick={ submitAnswer }>回答する</a> { Q1.message }
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col s6">
+              <div class="card">
+                <div class="card-content">
+                  <span class="card-title">Question 2</span>
+                  <p>回答を入力してください</p>
+                  <div class="input-field">
+                    <input id="answer_Q2" type=text>
+                    <label for="answer_Q2">Answer</label>
+                  </div>
+                </div>
+                <div class="card-action">
+                  <a class="btn" id="submit_Q2" onClick={ submitAnswer }>回答する</a> { Q2.message }
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col s6">
+              <div class="card">
+                <div class="card-content">
+                  <span class="card-title">Question 3</span>
+                  <p>回答を入力してください</p>
+                  <div class="input-field">
+                    <input id="answer_Q3" type=text>
+                    <label for="answer_Q3">Answer</label>
+                  </div>
+                </div>
+                <div class="card-action">
+                  <a class="btn" id="submit_Q3" onClick={ submitAnswer }>回答する</a> { Q3.message }
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        this.Q1 = { correct: false, message: ""};
+        this.Q2 = { correct: false, message: ""};
+        this.Q3 = { correct: false, message: ""};
+
+        submitAnswer(e){
+          var question = e.currentTarget.id.split("_").pop();
+          var answer = $('#answer_'+question).val();
+
+          fetch("https://script.google.com/macros/s/AKfycbzjtp5c8GIKcz7u9EUiWQsYveqgUbEzyQQZhFjIeIFpu7CsBEI/exec?question=" + question + "&answer=" + answer)
+          .then(response => response.json())
+          .then(json => {
+            eval("this." + question + ".correct = json.correct;");
+            eval("this." + question + ".message = json.message;");
+          this.update();
+          });
+        }
+
+      </quiz>
+
+    </script>
+
+    <script>riot.mount('*');</script>
+
+  </body>
+</html>
