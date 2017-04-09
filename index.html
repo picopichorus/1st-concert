@@ -102,17 +102,31 @@
         this.Q2 = { correct: false, message: ""};
         this.Q3 = { correct: false, message: ""};
 
+        json_ajax = {};
+
         submitAnswer(e){
           var question = e.currentTarget.id.split("_").pop();
           var answer = $('#answer_'+question).val();
+          var self = this;
 
-          fetch("https://script.google.com/macros/s/AKfycbzjtp5c8GIKcz7u9EUiWQsYveqgUbEzyQQZhFjIeIFpu7CsBEI/exec?question=" + question + "&answer=" + answer)
-          .then(response => response.json())
-          .then(json => {
-            eval("this." + question + ".correct = json.correct;");
-            eval("this." + question + ".message = json.message;");
-          this.update();
+          $.ajax({
+            url: "https://script.google.com/macros/s/AKfycbzjtp5c8GIKcz7u9EUiWQsYveqgUbEzyQQZhFjIeIFpu7CsBEI/exec?question=" + question + "&answer=" + answer,
+            dataType: "jsonp"
+          })
+          .done(function(json) {
+            if (json.message) {
+              json_ajax = json;
+            } else {
+              json_ajax = {correct: false, message: "Error: No Result Rerurned"};
+            }
+            self_update(self, question);
           });
+        }
+
+        function self_update(self, question){
+          eval("self." + question + ".correct = json_ajax.correct;");
+          eval("self." + question + ".message = json_ajax.message;");
+          self.update();
         }
 
       </quiz>
