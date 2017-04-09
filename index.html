@@ -54,7 +54,8 @@
                   </div>
                 </div>
                 <div class="card-action">
-                  <a class="btn" id="submit_Q1" onClick={ submitAnswer }>回答する</a> { Q1.message }
+                  <a class="btn" id="submit_Q1" onClick={ submitAnswer }>回答する</a>
+                  <p class="{ Q1.style }">{ Q1.message }</p>
                 </div>
               </div>
             </div>
@@ -72,7 +73,8 @@
                   </div>
                 </div>
                 <div class="card-action">
-                  <a class="btn" id="submit_Q2" onClick={ submitAnswer }>回答する</a> { Q2.message }
+                  <a class="btn" id="submit_Q2" onClick={ submitAnswer }>回答する</a>
+                  <p class="{ Q2.style }">{ Q2.message }</p>
                 </div>
               </div>
             </div>
@@ -90,7 +92,8 @@
                   </div>
                 </div>
                 <div class="card-action">
-                  <a class="btn" id="submit_Q3" onClick={ submitAnswer }>回答する</a> { Q3.message }
+                  <a class="btn" id="submit_Q3" onClick={ submitAnswer }>回答する</a>
+                  <p class={ Q3.style }>{ Q3.message }</p>
                 </div>
               </div>
             </div>
@@ -98,15 +101,15 @@
 
         </div>
 
-        this.Q1 = { correct: false, message: ""};
-        this.Q2 = { correct: false, message: ""};
-        this.Q3 = { correct: false, message: ""};
+        this.Q1 = { correct: false, message: "", style: "red-text"};
+        this.Q2 = { correct: false, message: "", style: "red-text"};
+        this.Q3 = { correct: false, message: "", style: "red-text"};
 
         json_ajax = {};
 
         submitAnswer(e){
           var question = e.currentTarget.id.split("_").pop();
-          var answer = $('#answer_'+question).val();
+          var answer = $("#answer_"+question).val();
           var self = this;
 
           $.ajax({
@@ -126,6 +129,11 @@
         function self_update(self, question){
           eval("self." + question + ".correct = json_ajax.correct;");
           eval("self." + question + ".message = json_ajax.message;");
+          if (json_ajax.correct) {
+            eval("self." + question + ".style = 'green-text text-accent-4';");
+          } else {
+            eval("self." + question + ".style = 'red-text';");
+          }
           self.update();
         }
 
