@@ -104,24 +104,26 @@
         this.Q1 = { correct: false, message: "", style: "red-text"};
         this.Q2 = { correct: false, message: "", style: "red-text"};
         this.Q3 = { correct: false, message: "", style: "red-text"};
-        this.last_link = "#";
+        this.last_link = "";
 
-        json_ajax = {};
+        this.json_ajax = {};
 
         submitAnswer(e) {
           var question = e.currentTarget.id.split("_").pop();
           var answer = answer_normalize($("#answer_"+question).val());
           var self = this;
 
-          $.ajax({
-            url: "https://script.google.com/macros/s/AKfycbzjtp5c8GIKcz7u9EUiWQsYveqgUbEzyQQZhFjIeIFpu7CsBEI/exec?question=" + question + "&answer=" + answer,
-            dataType: "jsonp"
-          })
-          .done(function(json) {
+          (function () {
+            return $.ajax({
+              url: "https://script.google.com/macros/s/AKfycbzjtp5c8GIKcz7u9EUiWQsYveqgUbEzyQQZhFjIeIFpu7CsBEI/exec?question=" + question + "&answer=" + answer,
+              dataType: "jsonp"
+            })
+          })()
+          .done(function (json) {
             if (json.message) {
-              json_ajax = json;
+              self.json_ajax = json;
             } else {
-              json_ajax = {correct: false, message: "Error: No Result Rerurned"};
+              self.json_ajax = {correct: false, message: "Error: No Result Rerurned"};
             }
             self_update(self, question);
           });
@@ -141,9 +143,9 @@
         }
 
         function self_update(self, question) {
-          eval("self." + question + ".correct = json_ajax.correct;");
-          eval("self." + question + ".message = json_ajax.message;");
-          if (json_ajax.correct) {
+          eval("self." + question + ".correct = self.json_ajax.correct;");
+          eval("self." + question + ".message = self.json_ajax.message;");
+          if (self.json_ajax.correct) {
             eval("self." + question + ".style = 'green-text text-accent-4';");
           } else {
             eval("self." + question + ".style = 'red-text';");
