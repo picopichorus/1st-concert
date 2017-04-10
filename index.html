@@ -93,7 +93,7 @@
                 </div>
                 <div class="card-action">
                   <a class="btn" id="submit_Q3" onClick={ submitAnswer }>回答する</a>
-                  <p class={ Q3.style }>{ Q3.message }</p>
+                  <p><a class={ Q3.style } href={ last_link }>{ Q3.message }</a></p>
                 </div>
               </div>
             </div>
@@ -104,6 +104,7 @@
         this.Q1 = { correct: false, message: "", style: "red-text"};
         this.Q2 = { correct: false, message: "", style: "red-text"};
         this.Q3 = { correct: false, message: "", style: "red-text"};
+        this.last_link = "#";
 
         json_ajax = {};
 
@@ -133,6 +134,12 @@
             eval("self." + question + ".style = 'green-text text-accent-4';");
           } else {
             eval("self." + question + ".style = 'red-text';");
+          }
+          if (self.Q3.correct) {
+            self.last_link = self.Q3.message;
+            self.Q3.message = "特典へのリンクはこちら";
+          } else {
+            self.last_link = "";
           }
           self.update();
         }
