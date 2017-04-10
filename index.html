@@ -108,9 +108,9 @@
 
         json_ajax = {};
 
-        submitAnswer(e){
+        submitAnswer(e) {
           var question = e.currentTarget.id.split("_").pop();
-          var answer = $("#answer_"+question).val();
+          var answer = answer_normalize($("#answer_"+question).val());
           var self = this;
 
           $.ajax({
@@ -127,7 +127,20 @@
           });
         }
 
-        function self_update(self, question){
+        function answer_normalize(answer) {
+          answer = answer.replace(/./g, function(s) {
+            if (s.charCodeAt() > 0xFF00 && s.charCodeAt() < 0xFF5F) {
+              return String.fromCharCode(s.charCodeAt() - 0xFEE0);
+            } else {
+              return s;
+            }
+          });
+          answer = answer.replace(/　/g, " ");
+          answer = answer.toLowerCase();
+          return answer;
+        }
+
+        function self_update(self, question) {
           eval("self." + question + ".correct = json_ajax.correct;");
           eval("self." + question + ".message = json_ajax.message;");
           if (json_ajax.correct) {
