@@ -74,7 +74,7 @@
                 </div>
                 <div class="card-action">
                   <a class="btn" id="submit_Q3" onClick={ submitAnswer }>回答する</a>
-                  <p><a class={ Q3.style } href={ last_link }>{ Q3.message }</a></p>
+                  <p><a id="message_Q3" class={ Q3.style } href={ last_link } style="display:none;">{ Q3.message }</a></p>
                 </div>
               </div>
             </div>
@@ -138,6 +138,9 @@
             self.last_link = "";
           }
           self.update();
+          if (self.Q3.message != "") {
+            $('#message_Q3').show();
+          }
         }
 
       </quiz>
